@@ -78,7 +78,7 @@ void move_front(float rad)
     for (int j = 0; j < 3; j++)
     {
         printf("move front id %d\n", rubiksCube[i][j][0]->id);
-        rubiksCube[i][j][0]->rot_z = glm::rotate(Rot, glm::radians(rad),glm::vec3(0.0f, 0.0f, 1.0f));
+        rubiksCube[0][j][i]->rot_z = glm::rotate(Rot, glm::radians(rad),glm::vec3(0.0f, 0.0f, 1.0f));
         id++;
     }
   }
