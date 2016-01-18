@@ -55,6 +55,61 @@ const GLfloat g_vertex_buffer_data[] = {
     1.0f,-1.0f, 1.0f
 };
 
+const GLfloat g_cube_color_buffer_data[108] = {
+  0.0f,  1.0f,  0.0f, // LEFT FRONT
+  0.0f,  1.0f,  0.0f,
+  0.0f,  1.0f,  0.0f,
+
+  1.0f,  0.4f,  0.0f, // BACK UP
+  1.0f,  0.4f,  0.0f,
+  1.0f,  0.4f,  0.0f,
+
+  1.0f,  1.0f,  0.0f, // DOWN ?
+  1.0f,  1.0f,  0.0f,
+  1.0f,  1.0f,  0.0f,
+
+  1.0f,  0.4f,  0.0f, // BACK DOWN
+  1.0f,  0.4f,  0.0f,
+  1.0f,  0.4f,  0.0f,
+
+  0.0f,  1.0f,  0.0f, // LEFT BACK
+  0.0f,  1.0f,  0.0f,
+  0.0f,  1.0f,  0.0f,
+
+  1.0f,  1.0f,  0.0f, // ??
+  1.0f,  1.0f,  0.0f,
+  1.0f,  1.0f,  0.0f,
+
+  1.0f,  0.0f,  0.0f, // FRONT DOWN
+  1.0f,  0.0f,  0.0f,
+  1.0f,  0.0f,  0.0f,
+
+     0.0f,  0.0f,  1.0f, // RIGHT DOWN
+     0.0f,  0.0f,  1.0f,
+     0.0f,  0.0f,  1.0f,
+
+
+     0.0f,  0.0f,  1.0f, // RIGHT UP
+     0.0f,  0.0f,  1.0f,
+     0.0f,  0.0f,  1.0f,
+
+
+     1.0f,  1.0f,  1.0f, // TOP BACK
+     1.0f,  1.0f,  1.0f,
+     1.0f,  1.0f,  1.0f,
+
+
+     1.0f,  1.0f,  1.0f, // TOP FRONT
+     1.0f,  1.0f,  1.0f,
+     1.0f,  1.0f,  1.0f,
+
+
+     1.0f,  0.0f,  0.0f, // FRONT UP R
+     1.0f,  0.0f,  0.0f,
+     1.0f,  0.0f,  0.0f,
+ };
+
+
 const GLfloat g_color_buffer_data[108] = {
      0.583f,  0.771f,  0.014f,
      0.609f,  0.115f,  0.436f,

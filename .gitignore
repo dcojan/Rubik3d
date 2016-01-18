@@ -1,3 +1,4 @@
 *.o
 rubik3d
 *~
+.DS_Store

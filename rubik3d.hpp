@@ -11,9 +11,10 @@
 #include <vector>
 #include <chrono>
 #include <unistd.h>
+#include <rubik.hpp>
 #define WIDTH 		800
 #define HEIGHT 		600
-
+#include <controls.hpp>
 typedef struct		sdl_s
 {
 	SDL_Window* window;
@@ -27,6 +28,7 @@ typedef struct		cube_s
 
 extern const GLfloat g_vertex_buffer_data[108];
 extern const GLfloat g_color_buffer_data[108];
+extern const GLfloat g_cube_color_buffer_data[108];
 extern const GLchar*		vertexSource;
 extern const GLchar*		fragmentSource;
 

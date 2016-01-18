@@ -6,7 +6,9 @@ SRC= main.cpp \
 	clean.cpp \
 	cube_vertices.cpp \
 	shaders.cpp \
-	glsl.cpp 
+	glsl.cpp \
+	controls.cpp \
+	rubik.cpp 
 OBJ= $(SRC:.cpp=.o)
 
 all= $(NAME)

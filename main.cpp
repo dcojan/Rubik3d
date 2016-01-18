@@ -10,64 +10,57 @@ int			main(int argc, char *argv[])
   GLuint vertexArrayId; // Vertex Array Object
   glGenVertexArrays(1, &vertexArrayId);
   glBindVertexArray(vertexArrayId); // set as the current one
-
 	GLuint	shaderProgram = loadShaders();
 
-	GLuint vertexBuffer;
-	glGenBuffers(1, &vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_data), vertices_data, GL_STATIC_DRAW);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-//	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer); //make active buffer
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glEnableVertexAttribArray(0); //first attribute buffer : vertices
+	  	GLuint vertexBuffer;
+	  	glGenBuffers(1, &vertexBuffer);
+	  	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	  	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_data), vertices_data, GL_STATIC_DRAW);
+	  	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+	  //	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer); //make active buffer
+	  	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	  	glEnableVertexAttribArray(0); //first attribute buffer : vertices
 
-	// GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
-	// glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), 0);
-	// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), 0);
-	// glEnableVertexAttribArray(0);
-	// glEnableVertexAttribArray(posAttrib);
+	  	// GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
+	  	// glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), 0);
+	  	// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), 0);
+	  	// glEnableVertexAttribArray(0);
+	  	// glEnableVertexAttribArray(posAttrib);
 
-	GLuint colorbuffer;
-	 glGenBuffers(1, &colorbuffer);
-	 glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-	 glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
-	 glEnableVertexAttribArray(1);
-   glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-   glVertexAttribPointer(
-	      1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-	      3,                                // size
-	      GL_FLOAT,                         // type
-	      GL_FALSE,                         // normalized?
-	      0,                                // stride
-	      (void*)0                          // array buffer offset
-	  );
+	  	GLuint colorbuffer;
+	  	 glGenBuffers(1, &colorbuffer);
+	  	 glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+	  	 glBufferData(GL_ARRAY_BUFFER, sizeof(g_cube_color_buffer_data), g_cube_color_buffer_data, GL_STATIC_DRAW);
+	  	 glEnableVertexAttribArray(1);
+	     glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+	     glVertexAttribPointer(
+	  	      1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+	  	      3,                                // size
+	  	      GL_FLOAT,                         // type
+	  	      GL_FALSE,                         // normalized?
+	  	      0,                                // stride
+	  	      (void*)0                          // array buffer offset
+	  	  );
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++ CAMERA
-// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
- glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) WIDTH / (float)HEIGHT, 0.1f, 100.0f);
- // Camera matrix
- glm::mat4 View = glm::lookAt(
-                glm::vec3(4,3,5), // Camera is at (4,3,3), in World Space
-                glm::vec3(0,0,0), // and looks at the origin
-                glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-                );
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	init_rubik();
+	init_camera();
+
  // Model matrix : an identity matrix (model will be at the origin)
- glm::mat4 Model = glm::mat4(1.0f);
  // Our ModelViewProjection : multiplication of our 3 matrices
- glm::mat4 Scale = glm::scale(glm::vec3(0.5f, 0.5f ,0.5f));
+ // glm::mat4 Scale = glm::scale(glm::vec3(0.5f, 0.5f ,0.5f));
 
- glm::mat4 Trans1 = glm::translate(glm::vec3({1.0f, 0.0f, 0.0f}));
-
- glm::mat4 Trans2 = glm::translate(glm::vec3({0.0f, 0.0f, 0.0f}));
+ // glm::mat4 Trans1 = glm::translate(glm::vec3({1.0f, 0.0f, 0.0f}));
+ //
+ // glm::mat4 Trans2 = glm::translate(glm::vec3({0.0f, 0.0f, 0.0f}));
 
  // Get a handle for our "MVP" uniform
   // Only during the initialisation
-  GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
   // Send our transformation to the currently bound shader, in the "MVP" uniform
   //+++++++++++++++++++++++++++++++++++++++++++++++++++
 	glUseProgram(shaderProgram); //use our shaders
+	glEnable(GL_CULL_FACE);
+
 	glEnable(GL_DEPTH_TEST); //doesn't change a thing
 	glDepthFunc(GL_LESS); // doesnt't change a thing
 	glClearColor(0.0f, 0.0f, 0.4f, 1.0f);
@@ -75,6 +68,7 @@ int			main(int argc, char *argv[])
 	auto t_start = std::chrono::high_resolution_clock::now();
 	bool keyrot = false;
 	bool keyrot_start = true;
+	bool click = false;
 	float rad = 0.0f;
 	while (true)
 	{
@@ -92,12 +86,22 @@ int			main(int argc, char *argv[])
 						printf("KEY UP\n");
 						keyrot = true;
 					}
+			if (windowEvent.type == SDL_MOUSEBUTTONDOWN &&
+					windowEvent.button.button == SDL_BUTTON_LEFT)
+			{
+				printf("LEFT CLICK DOWN\n");
+			}
+			if (windowEvent.type == SDL_MOUSEBUTTONUP &&
+			windowEvent.button.button == SDL_BUTTON_LEFT)
+			{
+				printf("LEFT CLICK UP\n");
+
+			}
 		}
 			glm::mat4 Rot;
 			if (keyrot == true)
 			{
 				printf("KEY ROT - rad = %f\n", rad);
-
 				if (keyrot_start)
 				{
 					rad = 1.0f;
@@ -107,9 +111,8 @@ int			main(int argc, char *argv[])
 				{
 					usleep(5000);
 					printf("KEY ROT\n");
-
-					Rot = glm::rotate(Rot, glm::radians(rad),glm::vec3(0.0f, 0.0f, 1.0f));
-					glm::mat4 mvp1 = Projection * View * Rot * Trans1 * Scale * Model; // Remember, matrix multiplication is the other way around
+					move_front(rad);
+					// Rot = glm::rotate(Rot, glm::radians(rad),glm::vec3(0.0f, 0.0f, 1.0f));
 					rad++;
 				}
 				else
@@ -123,17 +126,25 @@ int			main(int argc, char *argv[])
 
 		// auto t_now = std::chrono::high_resolution_clock::now();
 		// float time = std::chrono::duration_cast<std::chrono::duration<float>>(t_now - t_start).count();
-		// APPLY CAMERA
-		// This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
-		glm::mat4 mvp1 = Projection * View * Rot * Trans1 * Scale * Model; // Remember, matrix multiplication is the other way around
 
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp1[0][0]);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		// computeMatricesFromInputs();
+		// glm::mat4 ProjectionMatrix = getProjectionMatrix();
+		// glm::mat4 ViewMatrix = getViewMatrix();
+		// glm::mat4 ModelMatrix = glm::mat4(1.0);
+		// glm::mat4 MVP = ProjectionMatrix * ViewMatrix * Model;
 
-		glm::mat4 mvp2 = Projection * View * Trans2 * Rot * Scale * Model; // Remember, matrix multiplication is the other way around
+		//
 
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp2[0][0]);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		draw_cube(shaderProgram);
+
+		// glm::mat4 mvp1 = Projection * View * Rot * Trans1 * Scale * Model; // Remember, matrix multiplication is the other way around
+		// glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp1[0][0]);
+		// glDrawArrays(GL_TRIANGLES, 0, 36);
+		// glm::mat4 mvp2 = Projection * View * Trans2 * Rot * Scale * Model; // Remember, matrix multiplication is the other way around
+		// glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp2[0][0]);
+		// //glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+		// glDrawArrays(GL_TRIANGLES, 0, 36);
+
 		SDL_GL_SwapWindow(sdl_var.window);
 	}
 	glDisableVertexAttribArray(0);
