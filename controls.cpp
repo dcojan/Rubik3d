@@ -20,6 +20,26 @@ float initialFoV = 45.0f;
 float speed = 3.0f;
 float mouseSpeed = 0.005f;
 
+t_move		get_key_move(SDL_Event *windowEvent)
+{
+	switch (windowEvent->key.keysym.sym)
+	{
+		case (SDLK_f): return MOVE_FRONT;
+		case (SDLK_r): return MOVE_RIGHT;
+		case (SDLK_b): return MOVE_BACK;
+		case (SDLK_l): return MOVE_LEFT;
+		case (SDLK_u): return MOVE_UP;
+		case (SDLK_d): return MOVE_DOWN;
+		case (SDLK_g): return MOVE_REV_FRONT;
+		case (SDLK_s): return MOVE_REV_RIGHT;
+		case (SDLK_c): return MOVE_REV_BACK;
+		case (SDLK_m): return MOVE_REV_LEFT;
+		case (SDLK_v): return MOVE_REV_UP;
+		case (SDLK_e): return MOVE_REV_DOWN;
+	}
+	return NONE;
+}
+
 void init_camera() {
 	//++++++++++++++++++++++++++++++++++++++++++++++++++ CAMERA
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units

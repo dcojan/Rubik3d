@@ -8,7 +8,7 @@ SRC= main.cpp \
 	shaders.cpp \
 	glsl.cpp \
 	controls.cpp \
-	rubik.cpp 
+	rubik.cpp
 OBJ= $(SRC:.cpp=.o)
 
 all= $(NAME)
@@ -19,7 +19,7 @@ FLAGS= --std=c++11
 
 UNAME_S := $(shell uname -s)
 
-INC= -I .
+INC= -I . -I ./glm
 ifeq ($(UNAME_S),Linux)
 LIB= -lSDL2 -lGLEW -lGL
 endif

@@ -66,40 +66,35 @@ int			main(int argc, char *argv[])
 	glClearColor(0.0f, 0.0f, 0.4f, 1.0f);
 	SDL_Event windowEvent;
 	auto t_start = std::chrono::high_resolution_clock::now();
-	bool keyrot = false;
 	bool keyrot_start = true;
 	bool click = false;
 	float rad = 0.0f;
+	t_move		move = NONE;
 	while (true)
 	{
 		if (SDL_PollEvent(&windowEvent))
 		{
-			// correspond to clicking the X button
 			if (windowEvent.type == SDL_QUIT) break;
-			// correspond to escape key - preferable with fullscreen
 			if (windowEvent.type == SDL_KEYUP &&
 				windowEvent.key.keysym.sym == SDLK_ESCAPE) break;
-			if (windowEvent.type == SDL_KEYUP &&
-					windowEvent.key.keysym.sym == SDLK_UP &&
-				keyrot == false)
+			if (windowEvent.type == SDL_KEYUP && move == NONE)
 					{
-						printf("KEY UP\n");
-						keyrot = true;
+						move = get_key_move(&windowEvent);
 					}
-			if (windowEvent.type == SDL_MOUSEBUTTONDOWN &&
-					windowEvent.button.button == SDL_BUTTON_LEFT)
-			{
-				printf("LEFT CLICK DOWN\n");
-			}
-			if (windowEvent.type == SDL_MOUSEBUTTONUP &&
-			windowEvent.button.button == SDL_BUTTON_LEFT)
-			{
-				printf("LEFT CLICK UP\n");
-
-			}
+		// 	if (windowEvent.type == SDL_MOUSEBUTTONDOWN &&
+		// 			windowEvent.button.button == SDL_BUTTON_LEFT)
+		// 	{
+		// 		printf("LEFT CLICK DOWN\n");
+		// 	}
+		// 	if (windowEvent.type == SDL_MOUSEBUTTONUP &&
+		// 	windowEvent.button.button == SDL_BUTTON_LEFT)
+		// 	{
+		// 		printf("LEFT CLICK UP\n");
+		//
+		// 	}
 		}
-			glm::mat4 Rot;
-			if (keyrot == true)
+		glm::mat4 Rot;
+			if (move != NONE)
 			{
 				printf("KEY ROT - rad = %f\n", rad);
 				if (keyrot_start)
@@ -111,14 +106,13 @@ int			main(int argc, char *argv[])
 				{
 					usleep(5000);
 					printf("KEY ROT\n");
-					move_front(rad);
-					// Rot = glm::rotate(Rot, glm::radians(rad),glm::vec3(0.0f, 0.0f, 1.0f));
+					apply_move(move, rad);
 					rad++;
 				}
 				else
 				{
 					printf("END KEY ROT\n");
-					keyrot = false;
+					move = NONE;
 					keyrot_start = true;
 				}
 			}
