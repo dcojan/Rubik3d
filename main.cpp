@@ -96,7 +96,6 @@ int			main(int argc, char *argv[])
 		glm::mat4 Rot;
 			if (move != NONE)
 			{
-				printf("KEY ROT - rad = %f\n", rad);
 				if (keyrot_start)
 				{
 					rad = 1.0f;
@@ -105,13 +104,11 @@ int			main(int argc, char *argv[])
 				if (rad <= 90.0f)
 				{
 					usleep(5000);
-					printf("KEY ROT\n");
 					apply_move(move, rad);
 					rad++;
 				}
 				else
 				{
-					printf("END KEY ROT\n");
 					move = NONE;
 					keyrot_start = true;
 				}
