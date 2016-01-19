@@ -69,24 +69,24 @@ void init_rubik()
 
 void apply_move(t_move move, float rad) {
   switch (move) {
-    		case (MOVE_FRONT) : move_front(rad); break;
-    		case (MOVE_RIGHT) : move_right(rad); break;
-    		case (MOVE_BACK): move_back(rad); break;
-    		case (MOVE_LEFT): move_left(rad); break;
-    		case (MOVE_UP): move_up(rad); break;
-    		case (MOVE_DOWN): move_down(rad); break;
-    		case (MOVE_REV_FRONT): move_rev_front(rad); break;
-    		case (MOVE_REV_RIGHT): move_rev_right(rad); break;
-    		case (MOVE_REV_BACK): move_rev_back(rad); break;
-    		case (MOVE_REV_LEFT): move_rev_left(rad); break;
-    		case (MOVE_REV_UP): move_rev_up(rad); break;
-    		case (MOVE_REV_DOWN): move_rev_down(rad); break;
-    		case (MOVE_DOUBLE_FRONT): break;
-    		case (MOVE_DOUBLE_RIGHT): break;
-    		case (MOVE_DOUBLE_BACK): break;
-    		case (MOVE_DOUBLE_LEFT): break;
-    		case (MOVE_DOUBLE_UP): break;
-    		case (MOVE_DOUBLE_DOWN): break;
+    		case (M_FRONT) : move_front(rad); break;
+    		case (M_RIGHT) : move_right(rad); break;
+    		case (M_BACK): move_back(rad); break;
+    		case (M_LEFT): move_left(rad); break;
+    		case (M_UP): move_up(rad); break;
+    		case (M_DOWN): move_down(rad); break;
+    		case (M_REV_FRONT): move_rev_front(rad); break;
+    		case (M_REV_RIGHT): move_rev_right(rad); break;
+    		case (M_REV_BACK): move_rev_back(rad); break;
+    		case (M_REV_LEFT): move_rev_left(rad); break;
+    		case (M_REV_UP): move_rev_up(rad); break;
+    		case (M_REV_DOWN): move_rev_down(rad); break;
+    		case (M_DOUBLE_FRONT): break;
+    		case (M_DOUBLE_RIGHT): break;
+    		case (M_DOUBLE_BACK): break;
+    		case (M_DOUBLE_LEFT): break;
+    		case (M_DOUBLE_UP): break;
+    		case (M_DOUBLE_DOWN): break;
   }
 }
 
