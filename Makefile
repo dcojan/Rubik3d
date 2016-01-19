@@ -2,13 +2,16 @@
 NAME=rubik3d
 
 SRC= main.cpp \
+	rubik3d.cpp \
 	init.cpp \
 	clean.cpp \
 	cube_vertices.cpp \
 	shaders.cpp \
 	glsl.cpp \
 	controls.cpp \
-	rubik.cpp
+	rubik.cpp \
+	parser.cpp
+
 OBJ= $(SRC:.cpp=.o)
 
 all= $(NAME)
