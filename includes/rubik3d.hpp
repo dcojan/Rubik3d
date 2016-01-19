@@ -56,7 +56,7 @@ extern const GLfloat g_cube_color_buffer_data[108];
 extern const GLchar*		vertexSource;
 extern const GLchar*		fragmentSource;
 
-int			rubik3d(std::list<t_move> *move_list);
+int			rubik3d(std::list<t_move> *shuffle, std::list<t_move> *solution);
 void		init_sdl(sdl_t *sdl_var);
 void		init_glew();
 void    init_vao(GLuint *vertexArrayId);

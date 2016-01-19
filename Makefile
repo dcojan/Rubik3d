@@ -1,8 +1,13 @@
 
-NAME=rubik3d
+NAME=librubik3d.so
+TESTNAME=rubik3d
 
-SRC= main.cpp \
-	rubik3d.cpp \
+DIRSRC= ./src/
+DIROBJ= ./obj/
+
+SRC_TEST = main.cpp
+
+SRC= 	rubik3d.cpp \
 	init.cpp \
 	clean.cpp \
 	cube_vertices.cpp \
@@ -13,16 +18,14 @@ SRC= main.cpp \
 	parser.cpp
 
 OBJ= $(SRC:.cpp=.o)
-
-all= $(NAME)
+DIROBJS= $(addprefix $(DIROBJ), $(OBJ))
 
 CC= g++
 
 FLAGS= --std=c++11
-
 UNAME_S := $(shell uname -s)
 
-INC= -I . -I ./glm
+INC= -I ./includes -I ./glm
 ifeq ($(UNAME_S),Linux)
 LIB= -lSDL2 -lGLEW -lGL
 endif
@@ -33,14 +36,19 @@ endif
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	$(CC) $^ -o $@ $(LIB)
+test: all
+	$(CC) $(FLAGS) $(DIRSRC)$(SRC_TEST) $(INC) -L. -lrubik3d -o $(TESTNAME)
 
-%.o:%.cpp
-	$(CC) $(FLAGS) -c $^ -o $@ $(INC)
+$(NAME): $(DIROBJS)
+	$(CC) $^ -shared -o $@ $(LIB)
+#	$(CC) $^ -o $@ $(LIB)
+
+$(DIROBJ)%.o:$(DIRSRC)%.cpp
+	@mkdir -p obj
+	$(CC) $(FLAGS) -fPIC -c $^ -o $@ $(INC)
 
 clean:
-	rm -rf $(OBJ)
+	rm -rf $(DIROBJ)
 
 fclean: clean
 	rm -rf $(NAME)

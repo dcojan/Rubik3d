@@ -1,11 +1,12 @@
 #include <rubik3d.hpp>
 
-void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *move_list)
+void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffle, std::list<t_move> *solution)
 {
 	SDL_Event		windowEvent;
 	auto				t_start = std::chrono::high_resolution_clock::now();
 	bool				keyrot_start = true;
-	bool				click = false;
+	// bool				click = false;
+	bool				launch_shuffle = false;
 	float				rad = 0.0f;
 	t_move			move = NONE;
   bool        quit = false;
@@ -22,7 +23,13 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *move_l
 			if (windowEvent.type == SDL_QUIT) break;
 			if (windowEvent.type == SDL_KEYUP &&
 				windowEvent.key.keysym.sym == SDLK_ESCAPE) break;
-      if (move_list == NULL)
+			if (shuffle)
+			{
+				if (windowEvent.type == SDL_KEYUP &&
+          windowEvent.key.keysym.sym == SDLK_RETURN)
+					launch_shuffle = true;
+			}
+	    else if (solution == NULL)
       {
 			     if (windowEvent.type == SDL_KEYUP && move == NONE)
 						   move = get_key_move(&windowEvent);
@@ -33,10 +40,10 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *move_l
           windowEvent.key.keysym.sym == SDLK_RETURN &&
           move == NONE)
           {
-            if (move_list->size() != 0)
+            if (solution->size() != 0)
             {
-              move = move_list->front();
-              move_list->pop_front();
+              move = solution->front();
+              solution->pop_front();
             }
             else
 						{
@@ -57,6 +64,23 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *move_l
 		//
 		// 	}
 		}
+		if (launch_shuffle)
+		{
+			if (move == NONE)
+			{
+				if (shuffle->size() != 0)
+				{
+					move = shuffle->front();
+					shuffle->pop_front();
+				}
+				else
+				{
+					shuffle = NULL;
+					launch_shuffle = false;
+				}
+			}
+		}
+
 		glm::mat4 Rot;
 			if (move != NONE)
 			{
@@ -93,7 +117,7 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *move_l
 	}
 }
 
-int			rubik3d(std::list<t_move> *move_list)
+int			rubik3d(std::list<t_move> *shuffle, std::list<t_move> *solution)
 {
 	sdl_t	sdl_var;
 	init_sdl(&sdl_var);
@@ -107,7 +131,7 @@ int			rubik3d(std::list<t_move> *move_list)
 	init_rubik();
 	init_camera();
 
-	main_loop(shaderProgram, sdl_var, move_list);
+	main_loop(shaderProgram, sdl_var, shuffle, solution);
 
 	glDisableVertexAttribArray(0); //vertices
 	glDisableVertexAttribArray(1); //color

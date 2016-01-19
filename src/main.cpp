@@ -8,6 +8,6 @@ int		main(int argc, char const *argv[])
 	{
 		move_list = parse(std::string(argv[1]));
 	}
-	rubik3d(move_list);
+	rubik3d(move_list, NULL);
 	return 0;
 }
