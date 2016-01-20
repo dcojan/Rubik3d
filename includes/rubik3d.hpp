@@ -55,6 +55,11 @@ extern const GLfloat g_color_buffer_data[108];
 extern const GLfloat g_cube_color_buffer_data[108];
 extern const GLchar*		vertexSource;
 extern const GLchar*		fragmentSource;
+extern const glm::vec3 transtab[27];
+extern GLuint position_vbo;
+extern GLuint post_rotation_vbo;
+extern glm::mat4 positions[27];
+extern glm::mat4 post_rotation[27];
 
 int			rubik3d(std::list<t_move> *shuffle, std::list<t_move> *solution);
 void		init_sdl(sdl_t *sdl_var);

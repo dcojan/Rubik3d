@@ -20,7 +20,7 @@ SRC= 	rubik3d.cpp \
 OBJ= $(SRC:.cpp=.o)
 DIROBJS= $(addprefix $(DIROBJ), $(OBJ))
 
-CC= g++
+CC= g++ 
 
 FLAGS= --std=c++11 -Wall -Werror -Wextra
 UNAME_S := $(shell uname -s)

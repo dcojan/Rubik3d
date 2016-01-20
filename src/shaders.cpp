@@ -1,40 +1,41 @@
 #include <rubik3d.hpp>
 
+
+void compile_shader(const GLchar* text, const GLuint& program, const GLenum& type)
+{
+	GLuint	id = glCreateShader(type);
+	glShaderSource(id, 1, &text, NULL);
+	glCompileShader(id);
+
+	GLint Result = GL_FALSE;
+	int InfoLogLength;
+	glGetShaderiv(id, GL_COMPILE_STATUS, &Result);
+	glGetShaderiv(id, GL_INFO_LOG_LENGTH, &InfoLogLength);
+	if ( InfoLogLength > 0 ){
+		std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
+		glGetShaderInfoLog(id, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+		printf("%s\n", &VertexShaderErrorMessage[0]);
+	 }
+	 glAttachShader(program, id);
+	 glLinkProgram(program);
+
+	 glDeleteShader(id);
+
+	 glGetShaderiv(program, GL_COMPILE_STATUS, &Result);
+ 		glGetShaderiv(program, GL_INFO_LOG_LENGTH, &InfoLogLength);
+ 		if ( InfoLogLength > 0 ){
+ 		std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
+ 		glGetShaderInfoLog(id, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+ 		printf("%s\n", &VertexShaderErrorMessage[0]);
+ 	 }
+}
+
+
 GLuint loadShaders()
 {
-		GLuint	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertexShader, 1, &vertexSource, NULL);
-		glCompileShader(vertexShader);
+		GLuint	program = glCreateProgram();
 
-		GLint Result = GL_FALSE;
-		int InfoLogLength;
-		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &Result);
-	 	glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &InfoLogLength);
-	 	if ( InfoLogLength > 0 ){
-		 	std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
-		 	glGetShaderInfoLog(vertexShader, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-		 	printf("%s\n", &VertexShaderErrorMessage[0]);
-		 }
-
-		GLuint	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
-		glCompileShader(fragmentShader);
-
-		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &Result);
-	 	glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &InfoLogLength);
-	 	if ( InfoLogLength > 0 ){
-	 		std::vector<char> FragmentShaderErrorMessage(InfoLogLength+1);
-	 		glGetShaderInfoLog(fragmentShader, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
-	 		printf("%s\n", &FragmentShaderErrorMessage[0]);
-	 	}
-		GLuint	shaderProgram = glCreateProgram();
-		glAttachShader(shaderProgram, vertexShader);
-		glAttachShader(shaderProgram, fragmentShader);
-		//glBindFragDataLocation(shaderProgram, 0, "outColor");
-		glLinkProgram(shaderProgram);
-		glDetachShader(shaderProgram, vertexShader);
-		glDetachShader(shaderProgram, fragmentShader);
-		glDeleteShader(fragmentShader);
-		glDeleteShader(vertexShader);
-		return shaderProgram;
+		compile_shader(vertexSource, program, GL_VERTEX_SHADER);
+		compile_shader(fragmentSource, program, GL_FRAGMENT_SHADER);
+		return program;
 }

@@ -2,6 +2,11 @@
 
 
 t_rubik   *rubiksCube[3][3][3];
+GLuint position_vbo;
+GLuint post_rotation_vbo;
+glm::mat4 positions[27];
+glm::mat4 post_rotation[27];
+
 const glm::vec3 transtab[27] = {
       // x     y     z
       {-1.0f, 1.0f, 1.0f}, // LINE FRONT UP
@@ -93,28 +98,61 @@ void apply_move(t_move move, float rad) {
 
 void draw_cube(GLuint shaderProgram)
 {
+  glBindVertexArray( shaderProgram );
   GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
   glm::mat4 ProjectionMatrix = getProjectionMatrix();
   glm::mat4 ViewMatrix = getViewMatrix();
-  glm::mat4 ModelMatrix = glm::mat4(1.0);
-  glm::mat4 Rot = glm::mat4(1.0);
-  glm::mat4 Scale = glm::scale(glm::vec3(0.5f, 0.5f ,0.5f));
+  // glm::mat4 ModelMatrix = glm::mat4(1.0);
+  // glm::mat4 Scale = glm::scale(glm::vec3(0.5f, 0.5f ,0.5f));
+  // for (int i = 0; i < 3; i++)
+  // {
+  //   for (int j = 0; j < 3; j++)
+  //   {
+  //     for (int k = 0; k < 3; k++)
+  //     {
+  //     // glm::mat4 Trans = rubiksCube[i][j][k]->trans;
+  //     glm::mat4 postRot = rubiksCube[i][j][k]->post_rot;
+  //     glm::mat4 mvp = ProjectionMatrix * ViewMatrix * postRot; // Remember, matrix multiplication is the other way around
+  //     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+  //     glDrawArrays(GL_TRIANGLES, 0, 36);
+  //     }
+  //   }
+  // }
+  glm::mat4 mvp = ProjectionMatrix * ViewMatrix; // Remember, matrix multiplication is the other way around
+  glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+  t_rubik **it = &(rubiksCube[0][0][0]);
+  // for (int i = 0; i < 3; i++)
+  // {
+  //   for (int j = 0; j < 3; j++)
+  //   {
+  //     for (int k = 0; k < 3; k++)
+  //     {
+  //       post_rotation[i * j * k] = rubiksCube[i][j][k]->trans;
+  //     }
+  //   }
+  // }
+  	for (int i = 0 ; i < 27 ; i++)
+  	{
+     post_rotation[i] = (*it)->post_rot;
+  	//	post_rotation[i] = glm::mat4(0.1f);
+      it++;
+  	}
+  	glBindBuffer( GL_ARRAY_BUFFER, post_rotation_vbo ); //bind vbo
+  	// you need to upload sizeof( vec4 ) * number_of_cubes bytes, DYNAMIC_DRAW because it is updated per frame
+  	glBufferData( GL_ARRAY_BUFFER, sizeof( glm::mat4 ) * 27, &post_rotation[0][0], GL_DYNAMIC_DRAW );
 
-  for (int i = 0; i < 3; i++)
-  {
-    for (int j = 0; j < 3; j++)
+    it = &(rubiksCube[0][0][0]);
+    for (int i = 0 ; i < 27 ; i++)
     {
-      for (int k = 0; k < 3; k++)
-      {
-      glm::mat4 Trans = rubiksCube[i][j][k]->trans;
-      glm::mat4 postRot = rubiksCube[i][j][k]->post_rot;
-      Rot = rubiksCube[i][j][k]->rot;
-      glm::mat4 mvp = ProjectionMatrix * ViewMatrix * postRot * Trans * Rot * Scale * ModelMatrix; // Remember, matrix multiplication is the other way around
-      glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
-      glDrawArrays(GL_TRIANGLES, 0, 36);
+      positions[i] = (*it)->trans;
+      it++;
     }
-    }
-  }
+    glBindBuffer( GL_ARRAY_BUFFER, position_vbo ); //bind vbo
+	//you need to upload sizeof( vec4 ) * number_of_cubes bytes, DYNAMIC_DRAW because it is updated per frame
+	glBufferData( GL_ARRAY_BUFFER, sizeof( glm::mat4 ) * 27, &positions[0][0], GL_DYNAMIC_DRAW );
+
+  // glDrawElementsInstanced(GL_TRIANGLES, 0, 36, 27);
+  glDrawArraysInstanced( GL_TRIANGLES, 0, 36, 27);
 }
 
 void move_front(float rad)
@@ -126,6 +164,8 @@ void move_front(float rad)
   {
     for (int j = 0; j < 3; j++)
     {
+        if (rad >= 90.0f)
+            rad = 90.0f;
         MyQuat = glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, -rad)));
         rubiksCube[0][j][i]->post_rot = glm::toMat4(MyQuat * rubiksCube[0][j][i]->quat);
         if (rad == 90.0f)
