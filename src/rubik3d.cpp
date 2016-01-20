@@ -3,7 +3,7 @@
 void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffle, std::list<t_move> *solution)
 {
 	SDL_Event		windowEvent;
-//	auto				t_start = std::chrono::high_resolution_clock::now();
+	auto				lastTime = std::chrono::high_resolution_clock::now();
 	bool				keyrot_start = true;
 	// bool				click = false;
 	bool				launch_shuffle = false;
@@ -11,9 +11,20 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffl
 	t_move			move = NONE;
   bool        quit = false;
 
+	int nbFrames = 0;
 	glUseProgram(shaderProgram);
-		while (quit == false)
+	while (quit == false)
 	{
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		double difftime = std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTime).count();
+		nbFrames++;
+		if (difftime >= 1.0 ){ // If last prinf() was more than 1 sec ago
+		    // printf and reset timer
+		    printf("%f ms/frame\n", 1000.0/double(nbFrames));
+		    nbFrames = 0;
+		    lastTime += std::chrono::seconds(1);
+		}
+
 		if (SDL_PollEvent(&windowEvent))
 		{
 			if (windowEvent.type == SDL_QUIT) break;
@@ -82,14 +93,14 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffl
 			{
 				if (keyrot_start)
 				{
-					rad = 1.0f;
+					rad = 0.0f;
 					keyrot_start = false;
 				}
 				if (rad <= 90.0f)
 				{
 					// usleep(5000);
 					apply_move(move, rad);
-					rad++;
+					rad += 2.0f;
 				}
 				else
 				{
@@ -99,8 +110,6 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffl
 			}
 		glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT); //clear the screen
 
-		// auto t_now = std::chrono::high_resolution_clock::now();
-		// float time = std::chrono::duration_cast<std::chrono::duration<float>>(t_now - t_start).count();
 
 		// computeMatricesFromInputs();
 		// glm::mat4 ProjectionMatrix = getProjectionMatrix();
