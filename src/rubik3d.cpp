@@ -3,7 +3,7 @@
 void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffle, std::list<t_move> *solution)
 {
 	SDL_Event		windowEvent;
-	auto				t_start = std::chrono::high_resolution_clock::now();
+//	auto				t_start = std::chrono::high_resolution_clock::now();
 	bool				keyrot_start = true;
 	// bool				click = false;
 	bool				launch_shuffle = false;

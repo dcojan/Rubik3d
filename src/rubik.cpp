@@ -87,14 +87,13 @@ void apply_move(t_move move, float rad) {
     		case (M_DOUBLE_LEFT): break;
     		case (M_DOUBLE_UP): break;
     		case (M_DOUBLE_DOWN): break;
+			case (NONE):break;
   }
 }
 
 void draw_cube(GLuint shaderProgram)
 {
   GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
-  glm::mat4 Model = glm::mat4(1.0f);
-
   glm::mat4 ProjectionMatrix = getProjectionMatrix();
   glm::mat4 ViewMatrix = getViewMatrix();
   glm::mat4 ModelMatrix = glm::mat4(1.0);

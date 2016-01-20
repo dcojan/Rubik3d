@@ -22,7 +22,7 @@ DIROBJS= $(addprefix $(DIROBJ), $(OBJ))
 
 CC= g++
 
-FLAGS= --std=c++11
+FLAGS= --std=c++11 -Wall -Werror -Wextra
 UNAME_S := $(shell uname -s)
 
 INC= -I ./includes -I ./glm
