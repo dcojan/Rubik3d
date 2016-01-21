@@ -1,23 +1,41 @@
 #include <rubik3d.hpp>
 
+const int FRAMES_PER_SECOND = 60;
+const double SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
+
 void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffle, std::list<t_move> *solution)
 {
 	SDL_Event		windowEvent;
+	auto 				t_start = std::chrono::high_resolution_clock::now();
 	auto 				currentTime = std::chrono::high_resolution_clock::now();
 	auto				lastTime = currentTime;
 	bool				keyrot_start = true;
-	// bool				click = false;
 	bool				launch_shuffle = false;
 	float				rad = 0.0f;
 	t_move			move = NONE;
   bool        quit = false;
 
-	int nbFrames = 0;
+	double			sleep_time = 0;
+	double			next_game_tick = 0;
+	int					nbFrames = 0;
+
 	glUseProgram(shaderProgram);
+
 	while (quit == false)
 	{
-		auto				lastTimeSpeed = currentTime;
 		currentTime = std::chrono::high_resolution_clock::now();
+
+		/// FRAMERATE CONTROL
+		next_game_tick += SKIP_TICKS;
+		sleep_time = next_game_tick - std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - t_start).count();
+		if (sleep_time >= 0)
+		{
+			usleep(sleep_time * 1000);
+		}
+		else
+			printf("WTF !!!\n");
+
+		// FRAME TIME MESURE
 		double difftime = std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTime).count();
 		nbFrames++;
 		if (difftime >= 1.0 ){ // If last prinf() was more than 1 sec ago
@@ -27,6 +45,7 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffl
 		    lastTime += std::chrono::seconds(1);
 		}
 
+		// KEY EVENT
 		if (SDL_PollEvent(&windowEvent))
 		{
 			if (windowEvent.type == SDL_QUIT) break;
@@ -73,6 +92,8 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffl
 		//
 		// 	}
 		}
+
+		// GET MOVE ID FROM PREDEFINED SHUFFLE MOVE SEQUENCE
 		if (launch_shuffle)
 		{
 			if (move == NONE)
@@ -90,31 +111,27 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffl
 			}
 		}
 
-		glm::mat4 Rot;
+		// UPDATE BUFFERS
 			if (move != NONE)
 			{
 				if (keyrot_start)
 				{
 					rad = 0.0f;
 					keyrot_start = false;
-					printf("START\n");
 				}
 				if (apply_move(move, rad) == false)
 				{
-					difftime = std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTimeSpeed).count();
-					printf("difftime = %f\n", difftime);
-					float speed = 200.0f;
-					rad += speed * (float)(difftime);
+					float speed = 90.0f / (float)(FRAMES_PER_SECOND);
+					rad += speed * 2;
 				}
 				else
 				{
-					printf("STOP\n");
 					move = NONE;
 					keyrot_start = true;
 				}
 			}
-		glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT); //clear the screen
-
+		// CLEAR SCREEN
+		glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
 
 		// computeMatricesFromInputs();
 		// glm::mat4 ProjectionMatrix = getProjectionMatrix();
@@ -122,6 +139,7 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffl
 		// glm::mat4 ModelMatrix = glm::mat4(1.0);
 		// glm::mat4 MVP = ProjectionMatrix * ViewMatrix * Model;
 
+		// RENDER
 		draw_cube(shaderProgram);
 		SDL_GL_SwapWindow(sdl_var.window);
 	}
@@ -132,83 +150,44 @@ int			rubik3d(std::list<t_move> *shuffle, std::list<t_move> *solution)
 	sdl_t	sdl_var;
 	init_sdl(&sdl_var);
 	init_glew();
+	// OPENGL CONFIGURATION
 	glFrontFace( GL_CCW );
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST); //doesn't change a thing
 	glDepthFunc(GL_LESS); // doesnt't change a thing
 	glClearColor(0.0f, 0.0f, 0.4f, 1.0f);
 
-
+	// INIT BUFFERS
   GLuint vertexArrayId;
 	init_vao(&vertexArrayId);
 	GLuint	vertexBuffer = init_vertex_buffer();
 	GLuint	colorBuffer = init_color_buffer();
+	init_position_buffer();
+	init_post_rotation_buffer();
 
-	glBindVertexArray( vertexArrayId );
-
-
-	//////////
-
-  glGenBuffers( 1, &position_vbo ); //gen vbo
-  glBindBuffer( GL_ARRAY_BUFFER, position_vbo ); //bind vbo
-
-	GLuint location = 2;
-	GLint components = 4; // 4 vertex attribute
-	GLenum type = GL_FLOAT;
-	GLboolean normalized = GL_FALSE;
-	GLsizei datasize = sizeof( glm::mat4 );
-	char* pointer = 0; //no other components
-	GLuint divisor = 1; //instanced
-	for( int c = 0; c < 4; c++ )
-	{
-		glEnableVertexAttribArray( location + c); //tell the location
-		glVertexAttribPointer( location + c, components, type, normalized, datasize, pointer + c * sizeof(glm::vec4)); //tell other data
-		glVertexAttribDivisor( location + c, divisor ); //is it instanced?
-	}
-
-	// for (int i = 0 ; i < 27 ; i++)
-	// {
-	// 	positions[i] = glm::translate(transtab[i]);
-	// }
-	// glBindBuffer( GL_ARRAY_BUFFER, position_vbo ); //bind vbo
-	// //you need to upload sizeof( vec4 ) * number_of_cubes bytes, DYNAMIC_DRAW because it is updated per frame
-	// glBufferData( GL_ARRAY_BUFFER, sizeof( glm::mat4 ) * 27, &positions[0][0], GL_STATIC_DRAW );
-
-	printf("init position done\n");
-	///////////
-
-	//////////
-
-	glGenBuffers( 1, &post_rotation_vbo ); //gen vbo
-	glBindBuffer( GL_ARRAY_BUFFER, post_rotation_vbo ); //bind vbo
-	//
-	for( int c = 0; c < 4; c++ )
-	{
-		glEnableVertexAttribArray( 8 + c); //tell the location
-		glVertexAttribPointer( 8 + c, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), pointer + c * sizeof(glm::vec4)); //tell other data
-		glVertexAttribDivisor( 8 + c, 1); //is it instanced?
-	}
-	glBindBuffer( GL_ARRAY_BUFFER, post_rotation_vbo ); //bind vbo
-	glBufferData( GL_ARRAY_BUFFER, sizeof( glm::mat4 ) * 27, &positions[0][0], GL_DYNAMIC_DRAW );
-
-	///////////
-
-
-
-///////
+	// INIT SHADERS
 	GLuint	shaderProgram = loadShaders();
 
-
-	init_rubik();
+	// INIT VIEW AND PROJECTIONS
 	init_camera();
+
+	// INIT 3D ARRAY
+	init_rubik();
 
 	main_loop(shaderProgram, sdl_var, shuffle, solution);
 
 	glDisableVertexAttribArray(0); //vertices
 	glDisableVertexAttribArray(1); //color
+	for( int c = 0; c < 4; c++ )
+	{
+		glDisableVertexAttribArray(2 + c); //position
+		glDisableVertexAttribArray(8 + c); //rotation
+	}
 	glDeleteProgram(shaderProgram); // del shader program
 	glDeleteBuffers(1, &vertexBuffer); //del vertex buffer
-  glDeleteBuffers(1, &colorBuffer); //del vertex buffer
+	glDeleteBuffers(1, &colorBuffer); //del vertex buffer
+	glDeleteBuffers(1, &position_vbo); //del vertex buffer
+  glDeleteBuffers(1, &post_rotation_vbo); //del vertex buffer
   glDeleteVertexArrays(1, &vertexArrayId); //del vao
 	clean_sdl(&sdl_var);
   return 0;

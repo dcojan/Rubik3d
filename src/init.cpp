@@ -25,6 +25,41 @@ void    init_vao(GLuint *vertexArrayId)
   glBindVertexArray(*vertexArrayId);
 }
 
+void    init_post_rotation_buffer()
+{
+  glGenBuffers( 1, &post_rotation_vbo ); //gen vbo
+	glBindBuffer( GL_ARRAY_BUFFER, post_rotation_vbo ); //bind vbo
+	char *pointer = 0;
+	for( int c = 0; c < 4; c++ )
+	{
+		glEnableVertexAttribArray( 8 + c); //tell the location
+		glVertexAttribPointer( 8 + c, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), pointer + c * sizeof(glm::vec4)); //tell other data
+		glVertexAttribDivisor( 8 + c, 1); //is it instanced?
+	}
+	glBindBuffer( GL_ARRAY_BUFFER, post_rotation_vbo ); //bind vbo
+	glBufferData( GL_ARRAY_BUFFER, sizeof( glm::mat4 ) * 27, &positions[0][0], GL_DYNAMIC_DRAW );
+}
+
+void    init_position_buffer()
+{
+    glGenBuffers( 1, &position_vbo ); //gen vbo
+    glBindBuffer( GL_ARRAY_BUFFER, position_vbo ); //bind vbo
+
+  	GLuint location = 2;
+  	GLint components = 4; // 4 vertex attribute
+  	GLenum type = GL_FLOAT;
+  	GLboolean normalized = GL_FALSE;
+  	GLsizei datasize = sizeof( glm::mat4 );
+  	char* pointer = 0; //no other components
+  	GLuint divisor = 1; //instanced
+  	for( int c = 0; c < 4; c++ )
+  	{
+  		glEnableVertexAttribArray( location + c); //tell the location
+  		glVertexAttribPointer( location + c, components, type, normalized, datasize, pointer + c * sizeof(glm::vec4)); //tell other data
+  		glVertexAttribDivisor( location + c, divisor ); //is it instanced?
+  	}
+}
+
 GLuint  init_vertex_buffer()
 {
   	GLuint vertexBuffer;

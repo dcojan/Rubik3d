@@ -67,6 +67,9 @@ void		init_glew();
 void    init_vao(GLuint *vertexArrayId);
 GLuint  init_vertex_buffer();
 GLuint  init_color_buffer();
+void    init_position_buffer();
+void    init_post_rotation_buffer();
+
 std::list<t_move>	*parse(std::string entry);
 
 void		clean_sdl(sdl_t *sdl_var);
