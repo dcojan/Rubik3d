@@ -97,17 +97,18 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffl
 				{
 					rad = 0.0f;
 					keyrot_start = false;
+					printf("START\n");
 				}
 				if (apply_move(move, rad) == false)
 				{
 					difftime = std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTimeSpeed).count();
-
 					printf("difftime = %f\n", difftime);
 					float speed = 200.0f;
 					rad += speed * (float)(difftime);
 				}
 				else
 				{
+					printf("STOP\n");
 					move = NONE;
 					keyrot_start = true;
 				}
