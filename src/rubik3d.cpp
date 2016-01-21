@@ -3,7 +3,8 @@
 void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffle, std::list<t_move> *solution)
 {
 	SDL_Event		windowEvent;
-	auto				lastTime = std::chrono::high_resolution_clock::now();
+	auto 				currentTime = std::chrono::high_resolution_clock::now();
+	auto				lastTime = currentTime;
 	bool				keyrot_start = true;
 	// bool				click = false;
 	bool				launch_shuffle = false;
@@ -15,7 +16,8 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffl
 	glUseProgram(shaderProgram);
 	while (quit == false)
 	{
-		auto currentTime = std::chrono::high_resolution_clock::now();
+		auto				lastTimeSpeed = currentTime;
+		currentTime = std::chrono::high_resolution_clock::now();
 		double difftime = std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTime).count();
 		nbFrames++;
 		if (difftime >= 1.0 ){ // If last prinf() was more than 1 sec ago
@@ -96,11 +98,13 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffl
 					rad = 0.0f;
 					keyrot_start = false;
 				}
-				if (rad <= 90.0f)
+				if (apply_move(move, rad) == false)
 				{
-					// usleep(5000);
-					apply_move(move, rad);
-					rad += 2.0f;
+					difftime = std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTimeSpeed).count();
+
+					printf("difftime = %f\n", difftime);
+					float speed = 200.0f;
+					rad += speed * (float)(difftime);
 				}
 				else
 				{
