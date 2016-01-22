@@ -62,6 +62,7 @@ extern GLuint post_rotation_vbo;
 extern glm::mat4 positions[27];
 extern glm::mat4 post_rotation[27];
 
+void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffle, std::list<t_move> *solution);
 int			rubik3d(std::list<t_move> *shuffle, std::list<t_move> *solution);
 void		init_sdl(sdl_t *sdl_var);
 void		init_glew();

@@ -113,7 +113,7 @@ char * imageData;
   	{
   		// read TGA header
   		filestr.read((char*) &tgaheader , sizeof(struct tga_header));			// Read tga header. For more information: see tga.h and link above
-  		printf("image type: %i n", tgaheader.imageTypeCode);
+  		// printf("image type: %i n", tgaheader.imageTypeCode);
 
   		// read pixel data
   		int imageSize = tgaheader.width * tgaheader.height * tgaheader.bpp;		// Calculate image size

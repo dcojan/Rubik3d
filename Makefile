@@ -8,6 +8,7 @@ DIROBJ= ./obj/
 SRC_TEST = main.cpp
 
 SRC= 	rubik3d.cpp \
+	main_loop.cpp \
 	init.cpp \
 	clean.cpp \
 	cube_vertices.cpp \
