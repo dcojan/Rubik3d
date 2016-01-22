@@ -15,12 +15,13 @@ SRC= 	rubik3d.cpp \
 	glsl.cpp \
 	controls.cpp \
 	rubik.cpp \
-	parser.cpp
+	parser.cpp \
+	load_texture.cpp
 
 OBJ= $(SRC:.cpp=.o)
 DIROBJS= $(addprefix $(DIROBJ), $(OBJ))
 
-CC= g++ 
+CC= g++
 
 FLAGS= --std=c++11 -Wall -Werror -Wextra
 UNAME_S := $(shell uname -s)

@@ -157,11 +157,19 @@ int			rubik3d(std::list<t_move> *shuffle, std::list<t_move> *solution)
 	glDepthFunc(GL_LESS); // doesnt't change a thing
 	glClearColor(0.0f, 0.0f, 0.4f, 1.0f);
 
+	// INIT TEXTURES
+	// GLuint    Texture = LoadTGAFile("uvtemplate.tga");
+	GLuint    Texture = loadTGA("texture/uvtemplate.tga");
+
+  // GLuint Texture = loadBMP("uvtemplate.bmp");
+	(void)Texture;
 	// INIT BUFFERS
   GLuint vertexArrayId;
 	init_vao(&vertexArrayId);
 	GLuint	vertexBuffer = init_vertex_buffer();
-	GLuint	colorBuffer = init_color_buffer();
+	// GLuint	colorBuffer = init_color_buffer();
+	GLuint  textureBuffer = init_texture_buffer();
+
 	init_position_buffer();
 	init_post_rotation_buffer();
 
@@ -185,7 +193,8 @@ int			rubik3d(std::list<t_move> *shuffle, std::list<t_move> *solution)
 	}
 	glDeleteProgram(shaderProgram); // del shader program
 	glDeleteBuffers(1, &vertexBuffer); //del vertex buffer
-	glDeleteBuffers(1, &colorBuffer); //del vertex buffer
+	glDeleteBuffers(1, &textureBuffer); //del vertex buffer
+	// glDeleteBuffers(1, &colorBuffer); //del vertex buffer
 	glDeleteBuffers(1, &position_vbo); //del vertex buffer
   glDeleteBuffers(1, &post_rotation_vbo); //del vertex buffer
   glDeleteVertexArrays(1, &vertexArrayId); //del vao

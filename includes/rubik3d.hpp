@@ -15,7 +15,7 @@
 #include <chrono>
 #include <unistd.h>
 #include <list>
-
+#include <fstream>
 typedef enum 			e_move
 {
 		M_FRONT,
@@ -50,6 +50,7 @@ typedef struct		sdl_s
 	SDL_GLContext context;
 }					sdl_t;
 
+extern const GLfloat g_uv_buffer_data[36 * 2];
 extern const GLfloat g_vertex_buffer_data[108];
 extern const GLfloat g_color_buffer_data[108];
 extern const GLfloat g_cube_color_buffer_data[108];
@@ -65,10 +66,14 @@ int			rubik3d(std::list<t_move> *shuffle, std::list<t_move> *solution);
 void		init_sdl(sdl_t *sdl_var);
 void		init_glew();
 void    init_vao(GLuint *vertexArrayId);
+GLuint  init_texture_buffer();
 GLuint  init_vertex_buffer();
 GLuint  init_color_buffer();
 void    init_position_buffer();
 void    init_post_rotation_buffer();
+GLuint  loadBMP(const char *imagepath);
+GLuint  loadTGA(const char* filename);
+GLuint	LoadTGAFile(const char *filename);
 
 std::list<t_move>	*parse(std::string entry);
 

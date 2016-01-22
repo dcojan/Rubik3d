@@ -108,16 +108,16 @@ void draw_cube(GLuint shaderProgram)
   // update translation and position
   t_rubik **it = &(rubiksCube[0][0][0]);
 
-  	for (int i = 0 ; i < 27 ; i++)
-  	{
-      post_rotation[i] = (*it)->post_rot;
-      positions[i] = (*it)->trans;
-      it++;
-  	}
-  	glBindBuffer( GL_ARRAY_BUFFER, post_rotation_vbo ); //bind vbo
-  	glBufferData( GL_ARRAY_BUFFER, sizeof( glm::mat4 ) * 27, &post_rotation[0][0], GL_DYNAMIC_DRAW );
-    glBindBuffer( GL_ARRAY_BUFFER, position_vbo ); //bind vbo
-	  glBufferData( GL_ARRAY_BUFFER, sizeof( glm::mat4 ) * 27, &positions[0][0], GL_DYNAMIC_DRAW );
+  for (int i = 0 ; i < 27 ; i++)
+  {
+    post_rotation[i] = (*it)->post_rot;
+    positions[i] = (*it)->trans;
+    it++;
+  }
+  glBindBuffer( GL_ARRAY_BUFFER, post_rotation_vbo ); //bind vbo
+  glBufferData( GL_ARRAY_BUFFER, sizeof( glm::mat4 ) * 27, &post_rotation[0][0], GL_DYNAMIC_DRAW );
+  glBindBuffer( GL_ARRAY_BUFFER, position_vbo ); //bind vbo
+  glBufferData( GL_ARRAY_BUFFER, sizeof( glm::mat4 ) * 27, &positions[0][0], GL_DYNAMIC_DRAW );
 
   glDrawArraysInstanced( GL_TRIANGLES, 0, 36, 27);
 }
