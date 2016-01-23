@@ -5,6 +5,7 @@ int			rubik3d(std::list<t_move> *shuffle, std::list<t_move> *solution)
 	sdl_t	sdl_var;
 	init_sdl(&sdl_var);
 	init_glew();
+
 	// OPENGL CONFIGURATION
 	glFrontFace( GL_CCW );
 	glEnable(GL_CULL_FACE);
@@ -13,11 +14,11 @@ int			rubik3d(std::list<t_move> *shuffle, std::list<t_move> *solution)
 	glClearColor(0.0f, 0.0f, 0.4f, 1.0f);
 
 	// INIT TEXTURES
-	// GLuint    Texture = LoadTGAFile("uvtemplate.tga");
-	GLuint    Texture = loadTGA("texture/uvtemplate.tga");
-
-  // GLuint Texture = loadBMP("uvtemplate.bmp");
-	(void)Texture;
+	std::string cpath = std::string(__FILE__);
+	cpath = cpath.substr(0, cpath.find_last_of("/\\"));
+	cpath = cpath.substr(0, cpath.find_last_of("/\\"));
+	cpath += "/texture/uvtemplate.tga";
+	GLuint    Texture = loadTGA(cpath.c_str());
 	// INIT BUFFERS
   GLuint vertexArrayId;
 	init_vao(&vertexArrayId);
@@ -37,8 +38,10 @@ int			rubik3d(std::list<t_move> *shuffle, std::list<t_move> *solution)
 	// INIT 3D ARRAY
 	init_rubik();
 
+	// MAIN STUFF
 	main_loop(shaderProgram, sdl_var, shuffle, solution);
 
+	// CLEANING
 	glDisableVertexAttribArray(0); //vertices
 	glDisableVertexAttribArray(1); //color
 	for( int c = 0; c < 4; c++ )
@@ -49,6 +52,7 @@ int			rubik3d(std::list<t_move> *shuffle, std::list<t_move> *solution)
 	glDeleteProgram(shaderProgram); // del shader program
 	glDeleteBuffers(1, &vertexBuffer); //del vertex buffer
 	glDeleteBuffers(1, &textureBuffer); //del vertex buffer
+	glDeleteTextures(1, &Texture);
 	// glDeleteBuffers(1, &colorBuffer); //del vertex buffer
 	glDeleteBuffers(1, &position_vbo); //del vertex buffer
   glDeleteBuffers(1, &post_rotation_vbo); //del vertex buffer

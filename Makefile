@@ -45,7 +45,7 @@ $(NAME): $(DIROBJS)
 	$(CC) $^ -shared -o $@ $(LIB)
 #	$(CC) $^ -o $@ $(LIB)
 
-$(DIROBJ)%.o:$(DIRSRC)%.cpp
+$(DIROBJ)%.o: $(abspath $(DIRSRC)%.cpp)
 	@mkdir -p obj
 	$(CC) $(FLAGS) -fPIC -c $^ -o $@ $(INC)
 

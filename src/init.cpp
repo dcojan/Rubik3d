@@ -16,7 +16,6 @@ void		init_glew()
 	glewInit();
 	GLuint vertexBuffer;
 	glGenBuffers(1, &vertexBuffer);
-	// printf("%u\n", vertexBuffer);
 }
 
 void    init_vao(GLuint *vertexArrayId)
