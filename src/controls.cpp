@@ -56,9 +56,10 @@ void init_camera() {
 
 void move_camera(int x, int y)
 {
+	float speed = 3.0f;
 	static glm::vec3 position = glm::vec3(4.f,3.f, 5.f);
-	float yawAngle = 1.0f;
- 	float pitchAngle = 1.0f;
+	float yawAngle = 1.0f * speed;
+ 	float pitchAngle = 1.0f * speed;
 
 	glm::vec3 target = glm::vec3(0.f, 0.f, 0.f);
 	glm::vec3 camera_up_vector = glm::vec3(0.f, 1.f, 0.f);

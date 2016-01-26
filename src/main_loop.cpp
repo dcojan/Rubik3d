@@ -20,9 +20,14 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffl
 	int					nbFrames = 0;
 
 	glUseProgram(shaderProgram);
-  if (SDL_SetRelativeMouseMode(SDL_TRUE) == -1)
-    printf("relative mouse mode not supported\n");
+  // if (SDL_SetRelativeMouseMode(SDL_TRUE) == -1)
+    // printf("relative mouse mode not supported\n");
 
+		bool click_down = false;
+		int mousex;
+		int mousey;
+		int mousebasex;
+		int mousebasey;
 	while (quit == false)
 	{
 		currentTime = std::chrono::high_resolution_clock::now();
@@ -63,19 +68,25 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffl
             windowEvent.button.button == SDL_BUTTON_LEFT)
         {
           // printf("LEFT CLICK DOWN\n");
+					click_down = true;
+					SDL_GetMouseState(&mousebasex, &mousebasey);
+					mousex = mousebasex;
+					mousey = mousebasey;
         }
         else if (windowEvent.type == SDL_MOUSEBUTTONUP &&
         windowEvent.button.button == SDL_BUTTON_LEFT)
         {
           // printf("LEFT CLICK UP\n");
+					click_down = false;
         }
-        else if (windowEvent.type == SDL_MOUSEMOTION)
+        if (click_down == true && windowEvent.type == SDL_MOUSEMOTION)
         {
-          int x;
-          int y;
-          SDL_GetRelativeMouseState(&x, &y);
+          // int x;
+          // int y;
+          // SDL_GetRelativeMouseState(&x, &y);
+					SDL_GetMouseState(&mousex, &mousey);
           // printf("mouse relative position : %d %d\n",x, y);
-          move_camera(x, y);
+          // move_camera(x, y);
         }
 
 			if (shuffle)
@@ -109,7 +120,13 @@ void 		main_loop(GLuint shaderProgram, sdl_t	&sdl_var, std::list<t_move> *shuffl
       }
 
 		}
-
+		if (click_down == true)
+		{
+			// printf("mouse relative position : %d %d\n", mousex - mousebasex, mousey - mousebasey);
+			move_camera(mousex - mousebasex, mousey - mousebasey);
+			mousebasex = mousex;
+			mousebasey = mousey;
+		}
 		// GET MOVE ID FROM PREDEFINED SHUFFLE MOVE SEQUENCE
 		if (launch_shuffle)
 		{
