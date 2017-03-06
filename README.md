@@ -39,4 +39,4 @@ Example :
 * d e : rotate down
 * b c : rotate back
 * f g : rotate front
-* Renter : if a valid move string is provided, auto shuffle the Rubik's cuke
+* Enter : if a valid move string is provided, auto shuffle the Rubik's cuke
